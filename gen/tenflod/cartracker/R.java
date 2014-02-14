@@ -39,31 +39,47 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int tracer=0x7f020004;
     }
     public static final class id {
-        public static final int action_settings=0x7f090006;
-        public static final int img=0x7f090003;
-        public static final int list=0x7f090001;
+        public static final int action_settings=0x7f09000c;
+        public static final int img=0x7f090009;
+        public static final int list=0x7f090004;
+        public static final int makeTxt=0x7f090002;
+        public static final int modelTxt=0x7f090003;
         public static final int nicknameTxt=0x7f090000;
-        public static final int thumbnail=0x7f090002;
-        public static final int txtFullName=0x7f090005;
-        public static final int txtNickname=0x7f090004;
+        public static final int pager=0x7f090005;
+        public static final int pager_title_strip=0x7f090006;
+        public static final int section_label=0x7f090007;
+        public static final int thumbnail=0x7f090008;
+        public static final int txtFullName=0x7f09000b;
+        public static final int txtNickname=0x7f09000a;
+        public static final int vehicle_delete=0x7f09000d;
+        public static final int yearTxt=0x7f090001;
     }
     public static final class layout {
         public static final int activity_add_vehicle=0x7f030000;
         public static final int activity_main=0x7f030001;
-        public static final int list_row=0x7f030002;
+        public static final int activity_settings=0x7f030002;
+        public static final int activity_vehicle=0x7f030003;
+        public static final int fragment_vehicle_dummy=0x7f030004;
+        public static final int list_row=0x7f030005;
     }
     public static final class menu {
-        public static final int add_vehicle=0x7f080000;
-        public static final int main=0x7f080001;
+        public static final int main=0x7f080000;
+        public static final int vehicle=0x7f080001;
     }
     public static final class string {
         public static final int action_settings=0x7f060002;
         public static final int addVehicleBtn_text=0x7f060003;
         public static final int add_vehicle_title=0x7f060006;
         public static final int app_name=0x7f060000;
+        public static final int clearDbBtn_text=0x7f06000b;
         public static final int desc=0x7f060004;
         public static final int save=0x7f060001;
         public static final int title_activity_add_vehicle=0x7f060005;
+        public static final int title_activity_settings=0x7f06000c;
+        public static final int title_section1=0x7f06000e;
+        public static final int title_section2=0x7f06000f;
+        public static final int title_section3=0x7f060010;
+        public static final int vehicle_delete=0x7f06000d;
         public static final int vehicle_make=0x7f060008;
         public static final int vehicle_model=0x7f060009;
         public static final int vehicle_nickname=0x7f060007;

@@ -5,8 +5,8 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="18" />
+        android:minSdkVersion="11"
+        android:targetSdkVersion="19" />
 
     <application
         android:allowBackup="true"
@@ -25,6 +25,21 @@
         <activity
             android:name="tenflod.cartracker.AddVehicleActivity"
             android:label="@string/title_activity_add_vehicle"
+            android:parentActivityName="tenflod.cartracker.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="tenflod.cartracker.MainActivity" />
+        </activity>
+        <activity
+            android:name="tenflod.cartracker.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName="tenflod.cartracker.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="tenflod.cartracker.MainActivity" />
+        </activity>
+        <activity
+            android:name="tenflod.cartracker.VehicleActivity"
             android:parentActivityName="tenflod.cartracker.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

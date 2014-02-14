@@ -2,20 +2,21 @@
 <resources>
 
     <string name="app_name">CarTracker</string>
-    
     <string name="save">Save</string>
-    
     <string name="action_settings">Settings</string>
-    
     <string name="addVehicleBtn_text">Add Vehicle</string>
     <string name="desc">Vehicle Image</string>
-    
     <string name="title_activity_add_vehicle">Add Vehicle</string>
     <string name="add_vehicle_title">Add a vehicle</string>
-    
     <string name="vehicle_nickname">Nickname</string>
     <string name="vehicle_make">Make</string>
     <string name="vehicle_model">Model</string>
     <string name="vehicle_year">Year</string>
+    <string name="clearDbBtn_text">Clear Database</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="vehicle_delete">Delete</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
 
 </resources>

@@ -19,6 +19,16 @@
         android:layout_margin="5sp" />
     
     <EditText 
+        android:id="@+id/yearTxt"
+        android:hint="@string/vehicle_year"
+        android:inputType="number"
+        android:maxLength="4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5sp" />
+    
+    <EditText 
+        android:id="@+id/makeTxt"
         android:hint="@string/vehicle_make"
         android:inputType="text"
         android:maxLength="50"
@@ -27,18 +37,11 @@
         android:layout_margin="5sp" />
     
     <EditText 
+        android:id="@+id/modelTxt"
         android:hint="@string/vehicle_model"
         android:inputType="text"
         android:maxLength="50"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5sp" />
-    
-    <EditText 
-        android:hint="@string/vehicle_year"
-        android:inputType="number"
-        android:maxLength="4"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5sp" />
     

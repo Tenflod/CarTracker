@@ -6,7 +6,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -36,13 +36,6 @@ public class AddVehicleActivity extends Activity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.add_vehicle, menu);
-		return true;
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
@@ -66,21 +59,35 @@ public class AddVehicleActivity extends Activity {
 		// Nickname cannot be empty.
 		if (nicknameTxt.getText().toString().matches("")) {
 			// Error message.
-			Crouton.makeText(AddVehicleActivity.this,
-					"Please give this vehicle a nickname.", Style.ALERT).show();
+			Crouton.makeText(AddVehicleActivity.this, "Please give this vehicle a nickname.", Style.ALERT).show();
 			// Set focus on nickname EditText.
 			nicknameTxt.requestFocus();
 			// Show keyboard.
-			InputMethodManager imm = (InputMethodManager) AddVehicleActivity.this
-					.getApplicationContext().getSystemService(
-							Context.INPUT_METHOD_SERVICE);
+			InputMethodManager imm = (InputMethodManager) AddVehicleActivity.this.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 			if (imm != null) {
 				// only will trigger it if no physical keyboard is open
 				imm.showSoftInput(nicknameTxt, 0);
 			}
 		} else {
-			Toast.makeText(AddVehicleActivity.this, "Vehicle added.",
-					Toast.LENGTH_SHORT).show();
+			EditText yearTxt = (EditText) findViewById(R.id.yearTxt);
+			EditText makeTxt = (EditText) findViewById(R.id.makeTxt);
+			EditText modelTxt = (EditText) findViewById(R.id.modelTxt);
+			
+			Toast.makeText(AddVehicleActivity.this, "Vehicle added.", Toast.LENGTH_SHORT).show();
+			
+			String nickname = nicknameTxt.getText().toString();
+			Integer year = null;
+			Log.d("debug", "yearTxt = '" + yearTxt.getText().toString().length() + "'");
+			if (yearTxt.getText().toString().length() > 0) {
+				year = Integer.parseInt(yearTxt.getText().toString());
+			}
+			String make = makeTxt.getText().toString();
+			String model = modelTxt.getText().toString();
+			
+			Vehicle vehicle = new Vehicle(nickname, year, make, model);
+			vehicle.save(AddVehicleActivity.this.getApplicationContext());
+			
+			AddVehicleActivity.this.setResult(RESULT_OK);
 			AddVehicleActivity.this.finish();
 		}
 	}

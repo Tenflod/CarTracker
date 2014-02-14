@@ -3,42 +3,96 @@ package tenflod.cartracker;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
+	static final int ADD_VEHICLE_REQUEST = 1;
+	static final int SETTINGS_REQUEST = 2;
+
 	ListView list;
 	Vehicle[] vehicles;
+	CustomList adapter;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+
+		getVehicleList();
+	}
 	
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        
-        vehicles = new Vehicle[4];
-        vehicles[0] = new Vehicle("Lancelot", 2006, "Mitsubishi", "Lancer", R.drawable.lancer);
-        vehicles[1] = new Vehicle("Green Machine", 2000, "Mercury", "Sable", R.drawable.sable);
-        vehicles[2] = new Vehicle("Red Fusion", 2007, "Ford", "Fusion", R.drawable.fusion);
-        vehicles[3] = new Vehicle("Tracer", 1998, "Mercury", "Tracer", R.drawable.tracer);
-        
-        
-        CustomList adapter = new CustomList(MainActivity.this, vehicles);
-        
-        list=(ListView)findViewById(R.id.list);
-	        list.setAdapter(adapter);
-	        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-	            @Override
-	            public void onItemClick(AdapterView<?> parent, View view,
-	                                    int position, long id) {
-	                Toast.makeText(MainActivity.this, "You Clicked at " +vehicles[+ position], Toast.LENGTH_SHORT).show();
-	            }
-	        });
-    }
-    
-    public void addVehicleClick(View view) {
-    	Intent intent = new Intent(MainActivity.this, AddVehicleActivity.class);
-    	MainActivity.this.startActivity(intent);
-    }
+	private void getVehicleList() {
+		vehicles = Vehicle.getAll(getApplicationContext());
+
+		adapter = new CustomList(this, vehicles);
+
+		list = (ListView) findViewById(R.id.list);
+		list.setAdapter(adapter);
+		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//				Vehicle listItem = (Vehicle) list.getItemAtPosition(position);
+				
+				Log.d("DEBUG", "position: " + position + ", id: " + id);
+				
+				//TODO
+				
+				Intent intent = new Intent(MainActivity.this, VehicleActivity.class);
+				MainActivity.this.startActivity(intent);
+			}
+		});
+		
+		adapter.notifyDataSetChanged();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu items for use in the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	public void addVehicleClick(View view) {
+		Intent intent = new Intent(this, AddVehicleActivity.class);
+		// MainActivity.this.startActivity(intent);
+		startActivityForResult(intent, ADD_VEHICLE_REQUEST);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d("debug", "requestCode == " + requestCode + ", resultCode == " + resultCode);
+		// Check which request we're responding to
+		if (requestCode == ADD_VEHICLE_REQUEST) {
+			// Make sure the request was successful
+			if (resultCode == RESULT_OK) {
+				getVehicleList();
+			}
+		} else if (resultCode == SETTINGS_REQUEST) {
+			getVehicleList();
+		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle presses on the action bar items
+		switch (item.getItemId()) {
+		case R.id.action_settings:
+			openSettings();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	public void openSettings() {
+		Intent intent = new Intent(this, SettingsActivity.class);
+		startActivityForResult(intent, SETTINGS_REQUEST);
+	}
 }

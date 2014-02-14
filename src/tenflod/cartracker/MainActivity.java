@@ -3,7 +3,6 @@ package tenflod.cartracker;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,6 +11,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class MainActivity extends Activity {
+	public static final String VEHICLE_DETAILS_POSITION = "vehicle details id";
+	
 	static final int ADD_VEHICLE_REQUEST = 1;
 	static final int SETTINGS_REQUEST = 2;
 
@@ -37,14 +38,9 @@ public class MainActivity extends Activity {
 		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//				Vehicle listItem = (Vehicle) list.getItemAtPosition(position);
-				
-				Log.d("DEBUG", "position: " + position + ", id: " + id);
-				
-				//TODO
-				
 				Intent intent = new Intent(MainActivity.this, VehicleActivity.class);
-				MainActivity.this.startActivity(intent);
+				intent.putExtra(VEHICLE_DETAILS_POSITION, position);
+				startActivity(intent);
 			}
 		});
 		
@@ -61,13 +57,11 @@ public class MainActivity extends Activity {
 
 	public void addVehicleClick(View view) {
 		Intent intent = new Intent(this, AddVehicleActivity.class);
-		// MainActivity.this.startActivity(intent);
 		startActivityForResult(intent, ADD_VEHICLE_REQUEST);
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Log.d("debug", "requestCode == " + requestCode + ", resultCode == " + resultCode);
 		// Check which request we're responding to
 		if (requestCode == ADD_VEHICLE_REQUEST) {
 			// Make sure the request was successful

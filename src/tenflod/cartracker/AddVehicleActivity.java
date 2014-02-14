@@ -1,28 +1,94 @@
 package tenflod.cartracker;
 
+import java.io.File;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class AddVehicleActivity extends Activity {
+	
+	private Uri mImageCaptureUri;
+	private ImageView mImageView;	
+
+	private static final int PICK_FROM_CAMERA = 1;
+	private static final int PICK_FROM_FILE = 2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_vehicle);
+		
 		// Show the Up button in the action bar.
 		setupActionBar();
+		
+		final String [] items			= new String [] {"From Camera", "From SD Card"};				
+		ArrayAdapter<String> adapter	= new ArrayAdapter<String> (this, android.R.layout.select_dialog_item,items);
+		AlertDialog.Builder builder		= new AlertDialog.Builder(this);
+
+		builder.setTitle("Select Image");
+		builder.setAdapter( adapter, new DialogInterface.OnClickListener() {
+			public void onClick( DialogInterface dialog, int item ) {
+				if (item == 0) {
+					Intent intent 	 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+					File file		 = new File(Environment.getExternalStorageDirectory(),
+							   			"tmp_avatar_" + String.valueOf(System.currentTimeMillis()) + ".jpg");
+					mImageCaptureUri = Uri.fromFile(file);
+
+					try {			
+						intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
+						intent.putExtra("return-data", true);
+
+						startActivityForResult(intent, PICK_FROM_CAMERA);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}			
+
+					dialog.cancel();
+				} else {
+					Intent intent = new Intent();
+
+	                intent.setType("image/*");
+	                intent.setAction(Intent.ACTION_GET_CONTENT);
+
+	                startActivityForResult(Intent.createChooser(intent, "Complete action using"), PICK_FROM_FILE);
+				}
+			}
+		} );
+
+		final AlertDialog dialog = builder.create();
+
+		mImageView = (ImageView) findViewById(R.id.img);
+
+		((Button) findViewById(R.id.imagePickerBtn)).setOnClickListener(new View.OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				dialog.show();
+			}
+		});
 	}
 
 	/**
@@ -51,6 +117,43 @@ public class AddVehicleActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d("DEBUG", "Add Vehicle Activity onActivityResult requestCode: " + requestCode + ", resultCode: " + resultCode);
+	    if (resultCode != RESULT_OK) return;
+
+		Bitmap bitmap 	= null;
+		String path		= "";
+
+		if (requestCode == PICK_FROM_FILE) {
+			mImageCaptureUri = data.getData(); 
+			path = getRealPathFromURI(mImageCaptureUri); //from Gallery 
+
+			if (path == null)
+				path = mImageCaptureUri.getPath(); //from File Manager
+
+			if (path != null) 
+				bitmap 	= BitmapFactory.decodeFile(path);
+		} else {
+			path	= mImageCaptureUri.getPath();
+			bitmap  = BitmapFactory.decodeFile(path);
+		}
+
+		mImageView.setImageBitmap(bitmap);		
+	}
+
+	public String getRealPathFromURI(Uri contentUri) {
+	    String res = null;
+	    String[] proj = { MediaStore.Images.Media.DATA };
+	    Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+	    if(cursor.moveToFirst()){;
+	       int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+	       res = cursor.getString(column_index);
+	    }
+	    cursor.close();
+	    return res;
+	}
 
 	public void saveVehicleClick(View view) {
 
@@ -77,7 +180,6 @@ public class AddVehicleActivity extends Activity {
 			
 			String nickname = nicknameTxt.getText().toString();
 			Integer year = null;
-			Log.d("debug", "yearTxt = '" + yearTxt.getText().toString().length() + "'");
 			if (yearTxt.getText().toString().length() > 0) {
 				year = Integer.parseInt(yearTxt.getText().toString());
 			}

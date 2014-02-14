@@ -6,7 +6,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 public class Vehicle {
 	
@@ -87,8 +86,6 @@ public class Vehicle {
 			Vehicle vehicle = new Vehicle(id, nickname, year, make, model);
 			vehicleList[i++] = vehicle;
 		    c.moveToNext();
-		    
-		    Log.d("DEBUG", "getAll for id " + id);
 		}
 		
 		return vehicleList;

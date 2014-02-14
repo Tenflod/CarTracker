@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,6 +51,11 @@ public class VehicleActivity extends FragmentActivity {
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
+		
+		Integer position = getIntent().getIntExtra(MainActivity.VEHICLE_DETAILS_POSITION, -1);
+		if (position != -1) {
+			mViewPager.setCurrentItem(position);
+		}
 	}
 
 	@Override
@@ -100,30 +104,17 @@ public class VehicleActivity extends FragmentActivity {
 			args.putInt(DummySectionFragment.VEHICLE_ID, vehicles[position].id);
 			fragment.setArguments(args);
 			
-			Log.d("DEBUG", "getItem position: " + position);
-			
 			return fragment;
 		}
 
 		@Override
 		public int getCount() {
-			// Show 3 total pages.
 			return vehicles.length;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
 			return vehicles[position].nickname;
-//			Locale l = Locale.getDefault();
-//			switch (position) {
-//			case 0:
-//				return getString(R.string.title_section1).toUpperCase(l);
-//			case 1:
-//				return getString(R.string.title_section2).toUpperCase(l);
-//			case 2:
-//				return getString(R.string.title_section3).toUpperCase(l);
-//			}
-//			return null;
 		}
 	}
 
@@ -152,12 +143,8 @@ public class VehicleActivity extends FragmentActivity {
 			Context context = getActivity().getApplicationContext();
 			Integer id = getArguments().getInt(VEHICLE_ID);
 			
-			Log.d("DEBUG", "DummySectionFragment id: " + id.toString());
-			
 			vehicle = Vehicle.getById(context, id);
 			dummyTextView.setText(vehicle.nickname);
-			
-			Log.d("DEBUG", "dummyTextView.Text: " + dummyTextView.getText().toString());
 			
 			return rootView;
 		}

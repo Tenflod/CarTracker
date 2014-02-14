@@ -77,11 +77,11 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
-		case R.id.action_settings:
-			openSettings();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+			case R.id.action_settings:
+				openSettings();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 

@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -120,27 +121,77 @@ public class AddVehicleActivity extends Activity {
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Log.d("DEBUG", "Add Vehicle Activity onActivityResult requestCode: " + requestCode + ", resultCode: " + resultCode);
-	    if (resultCode != RESULT_OK) return;
+	    if (resultCode != RESULT_OK) 
+	    	return;
 
-		Bitmap bitmap 	= null;
-		String path		= "";
+		switch (requestCode) {
+			case PICK_FROM_CAMERA:				
+				pickFromCamera();
+				break;
+			case PICK_FROM_FILE:
+				pickFromFile(data.getData());
+				
+				break;
+			default:
+				return;
+		}	
+	}
+	
+	public void pickFromCamera() {
+		String path	= mImageCaptureUri.getPath();
+		Bitmap bitmap  = decodeSampledBitmapFromResource(path, Vehicle.MAX_THUMBNAIL_DIMENSION, Vehicle.MAX_THUMBNAIL_DIMENSION);
+		
+		mImageView.setImageBitmap(bitmap);
+	}
+	
+	public void pickFromFile(Uri data) {
+		String path = getRealPathFromURI(mImageCaptureUri); //from Gallery
+		Bitmap bitmap 	= null;		
 
-		if (requestCode == PICK_FROM_FILE) {
-			mImageCaptureUri = data.getData(); 
-			path = getRealPathFromURI(mImageCaptureUri); //from Gallery 
+		if (path == null)
+			path = mImageCaptureUri.getPath(); //from File Manager
 
-			if (path == null)
-				path = mImageCaptureUri.getPath(); //from File Manager
+		if (path != null) 
+			bitmap 	= decodeSampledBitmapFromResource(path, Vehicle.MAX_THUMBNAIL_DIMENSION, Vehicle.MAX_THUMBNAIL_DIMENSION);
+		
+		mImageView.setImageBitmap(bitmap);	
+	}
+	
+	public static Bitmap decodeSampledBitmapFromResource(String path, int reqWidth, int reqHeight) {
 
-			if (path != null) 
-				bitmap 	= BitmapFactory.decodeFile(path);
-		} else {
-			path	= mImageCaptureUri.getPath();
-			bitmap  = BitmapFactory.decodeFile(path);
-		}
+	    // First decode with inJustDecodeBounds=true to check dimensions
+	    final BitmapFactory.Options options = new BitmapFactory.Options();
+	    options.inJustDecodeBounds = true;
+	    BitmapFactory.decodeFile(path, options);
 
-		mImageView.setImageBitmap(bitmap);		
+	    // Calculate inSampleSize
+	    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+	    // Decode bitmap with inSampleSize set
+	    options.inJustDecodeBounds = false;
+	    return BitmapFactory.decodeFile(path, options);
+	}
+	
+	public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+	    // Raw height and width of image
+	    final int height = options.outHeight;
+	    final int width = options.outWidth;
+	    int inSampleSize = 1;
+	
+	    if (height > reqHeight || width > reqWidth) {
+	
+	        final int halfHeight = height / 2;
+	        final int halfWidth = width / 2;
+	
+	        // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+	        // height and width larger than the requested height and width.
+	        while ((halfHeight / inSampleSize) > reqHeight
+	                && (halfWidth / inSampleSize) > reqWidth) {
+	            inSampleSize *= 2;
+	        }
+	    }
+	
+	    return inSampleSize;
 	}
 
 	public String getRealPathFromURI(Uri contentUri) {
@@ -156,7 +207,6 @@ public class AddVehicleActivity extends Activity {
 	}
 
 	public void saveVehicleClick(View view) {
-
 		EditText nicknameTxt = (EditText) findViewById(R.id.nicknameTxt);
 
 		// Nickname cannot be empty.

@@ -16,6 +16,8 @@ public class Vehicle {
 	String model;
 	Integer imageId = 0;
 	
+	public final static int MAX_THUMBNAIL_DIMENSION = 75; 
+	
 	public Vehicle(String nickname, Integer year, String make, String model)//, Integer imageId)
 	{
 		this.nickname = nickname;
